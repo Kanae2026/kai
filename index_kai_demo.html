@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株式会社開建設 | INNOVATIVE CONSTRUCTION</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    
+    <!-- Font Awesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           Reset & Base Styles
+        ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0F172A; 
+            --accent: #D4AF37;  
+            --text-main: #333333;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --font-en: 'Montserrat', sans-serif;
+            --font-ja-serif: 'Noto Serif JP', serif;
+            --font-ja-sans: 'Noto Sans JP', sans-serif;
+        }
+        body { font-family: var(--font-ja-sans); color: var(--text-main); background-color: var(--bg-light); line-height: 1.8; overflow-x: hidden; cursor: none; }
+        a { text-decoration: none; color: inherit; cursor: none; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent); }
+        .cursor-outline { width: 40px; height: 40px; border: 1px solid var(--accent); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        .hover-active .cursor-outline { width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.2); }
+        @media (max-width: 768px) { body { cursor: auto; } a { cursor: pointer; } .cursor-dot, .cursor-outline { display: none; } }
+
+        /* =========================================
+           Header & Menu
+        ========================================= */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; mix-blend-mode: difference; color: #fff; }
+        .logo a { font-family: var(--font-en); font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
+        .hamburger { width: 40px; height: 40px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 8px; z-index: 1001; }
+        .hamburger span { display: block; height: 2px; background-color: #fff; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .hamburger span:nth-child(1) { width: 40px; }
+        .hamburger span:nth-child(2) { width: 30px; }
+        .hamburger span:nth-child(3) { width: 20px; }
+        .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); width: 40px; }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); width: 40px; }
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--primary); display: flex; align-items: center; justify-content: center; clip-path: circle(0% at 100% 0%); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1); z-index: 999; }
+        .menu-overlay.active { clip-path: circle(150% at 100% 0%); }
+        .menu-overlay ul { text-align: center; }
+        .menu-overlay ul li { margin: 15px 0; overflow: hidden; }
+        /* モバイル時のメニュー文字サイズを調整 */
+        .menu-overlay ul li a { color: var(--white); font-family: var(--font-en); font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; display: inline-block; transform: translateY(100%); transition: transform 0.5s ease; }
+        .menu-overlay.active ul li a { transform: translateY(0); }
+        .menu-overlay ul li a:hover { color: var(--accent); }
+        .menu-ja { display: block; font-family: var(--font-ja-sans); font-size: 0.85rem; font-weight: 300; letter-spacing: 2px; margin-top: 5px;}
+
+        /* Common Sections */
+        section { padding: 120px 5%; }
+        /* モバイルでの見出しサイズを縮小(2.5rem -> 2remへ) */
+        .sec-en { font-family: var(--font-en); font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; color: var(--primary); line-height: 1; }
+        .sec-ja { font-family: var(--font-ja-sans); color: var(--accent); font-size: 0.95rem; letter-spacing: 3px; margin-top: 10px; font-weight: 700;}
+
+        /* =========================================
+           Hero Section
+        ========================================= */
+        .hero { position: relative; height: 100vh; background-color: var(--primary); overflow: hidden; display: flex; align-items: center; padding-left: 10%; }
+        .hero-bg { position: absolute; top: 0; right: 0; width: 65%; height: 100%; background: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1920&q=80') center/cover; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%); opacity: 0.7; filter: contrast(1.1) saturate(1.2); mix-blend-mode: luminosity; transition: transform 10s ease-out; }
+        .hero:hover .hero-bg { transform: scale(1.05); }
+        .hero-content { position: relative; z-index: 10; color: var(--white); }
+        .hero-badge { display: inline-block; border: 1px solid var(--accent); color: var(--accent); padding: 6px 20px; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 20px; border-radius: 50px; }
+        .hero-title { font-family: var(--font-en); font-size: clamp(2.2rem, 7vw, 7rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero-title span { color: var(--accent); }
+        .hero-subtitle { font-family: var(--font-ja-serif); font-size: clamp(0.95rem, 2.5vw, 1.8rem); letter-spacing: 5px; margin-bottom: 40px; }
+
+        /* =========================================
+           Vision & Message + 3 Grid Images
+        ========================================= */
+        .vision-section { display: flex; flex-direction: column; align-items: center; background-color: var(--white); padding-bottom: 60px; }
+        .philosophy-box { text-align: center; margin-bottom: 80px; max-width: 800px; }
+        .philosophy-title { font-family: var(--font-ja-serif); font-size: clamp(1.25rem, 3vw, 2.5rem); color: var(--primary); margin-bottom: 25px; line-height: 1.6; }
+        .philosophy-text { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 2; color: #555; }
+        
+        .team-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 1200px; margin-bottom: 120px; }
+        .team-img-wrapper { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 5; }
+        .team-img-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease; }
+        .team-img-wrapper:hover img { transform: scale(1.08); filter: grayscale(0%); }
+
+        .vertical-message-container { display: flex; justify-content: center; width: 100%; }
+        .vertical-text-box { writing-mode: vertical-rl; font-family: var(--font-ja-serif); height: 450px; display: flex; flex-wrap: wrap; align-content: center; gap: 40px; }
+        .vertical-title { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; color: var(--primary); letter-spacing: 5px; }
+        .vertical-desc { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 2.2; letter-spacing: 2px; color: var(--text-main); }
+
+        /* =========================================
+           Services
+        ========================================= */
+        .services-section { background-color: var(--bg-light); }
+        .service-intro { max-width: 800px; margin-top: 30px; margin-bottom: 60px; font-size: clamp(0.9rem, 1.5vw, 1rem); line-height: 2; }
+        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .service-card { position: relative; background: var(--white); padding: 40px 30px; border-radius: 12px; min-height: 350px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 1; }
+        .service-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), #1e2f4c); opacity: 0; transition: opacity 0.4s ease; z-index: -1; }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(15,23,42,0.15); }
+        .service-card:hover::before { opacity: 1; }
+        .service-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; transition: transform 0.4s ease; }
+        .service-card:hover .service-icon { transform: scale(1.1); color: #fff; }
+        .service-num { position: absolute; top: 20px; right: 25px; font-family: var(--font-en); font-size: 2.5rem; color: #E2E8F0; font-weight: 900; opacity: 0.5; transition: color 0.4s ease; }
+        .service-card:hover .service-num { color: rgba(255,255,255,0.1); }
+        .service-card h3 { font-size: 1.15rem; color: var(--primary); margin-bottom: 10px; transition: color 0.4s ease; }
+        .service-card p { font-size: 0.85rem; line-height: 1.8; color: #666; flex-grow: 1; transition: color 0.4s ease; }
+        .service-card:hover h3, .service-card:hover p { color: #fff; }
+
+        /* =========================================
+           CTA Banner 
+        ========================================= */
+        .cta-container { padding: 0 5% 100px; background-color: var(--bg-light); }
+        .cta-banner { display: flex; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); flex-wrap: wrap; }
+        .cta-img { width: 50%; min-height: 400px; background: url('https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=1200&q=80') center/cover; }
+        .cta-content { width: 50%; padding: 60px 50px; background: linear-gradient(135deg, var(--primary) 0%, #1e2f4c 100%); color: #fff; display: flex; flex-direction: column; justify-content: center; }
+        .cta-content h2 { font-family: var(--font-ja-serif); font-size: clamp(1.35rem, 3vw, 2.2rem); line-height: 1.4; margin-bottom: 15px; }
+        .cta-content p { font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 30px; line-height: 1.8; }
+        .cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--accent); color: #fff; font-family: var(--font-en); font-weight: 700; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); width: fit-content; }
+        .cta-btn:hover { background: #fff; color: var(--primary); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+
+        /* =========================================
+           Why Choose Us
+        ========================================= */
+        .strengths-section { background-color: var(--primary); color: var(--white); }
+        .sec-en-light { font-family: var(--font-en); font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; color: var(--white); line-height: 1; }
+        .sec-ja-light { font-family: var(--font-ja-sans); color: var(--accent); font-size: 0.95rem; letter-spacing: 3px; margin-top: 10px; font-weight: 700;}
+        .mvv-container { display: flex; flex-direction: column; gap: 60px; margin-top: 60px; max-width: 1000px; margin-inline: auto; }
+        .mvv-item { display: flex; align-items: flex-start; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; }
+        .mvv-num { font-family: var(--font-en); font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; color: transparent; -webkit-text-stroke: 1px var(--accent); line-height: 0.8; }
+        .mvv-content h3 { font-size: clamp(1.15rem, 2vw, 1.5rem); font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+        .mvv-content p { font-size: clamp(0.85rem, 1.5vw, 1rem); line-height: 1.8; color: rgba(255,255,255,0.7); }
+
+        /* =========================================
+           Works Section (Smart & Rich Carousel)
+        ========================================= */
+        .works-section { padding-top: 100px; padding-bottom: 100px; background-color: var(--white); overflow: hidden; color: var(--text-main);}
+        .works-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 5%; margin-bottom: 50px; }
+        
+        .swiper-container { width: 100%; padding-bottom: 60px; overflow: visible; }
+        .swiper-slide { width: 65%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; opacity: 0.3; transform: scale(0.92); transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .swiper-slide-active { opacity: 1; transform: scale(1); box-shadow: 0 15px 40px rgba(0,0,0,0.1); z-index: 10; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .work-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; background: linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.6) 60%, transparent); color: #fff; opacity: 0; transition: opacity 0.6s ease; }
+        .swiper-slide-active .work-overlay { opacity: 1; transition-delay: 0.2s; }
+        .work-overlay h4 { font-family: var(--font-ja-serif); font-size: clamp(1.1rem, 2vw, 1.5rem); margin-bottom: 5px; letter-spacing: 1px; }
+        .work-overlay p { font-size: 0.85rem; color: var(--accent); }
+
+        .swiper-pagination-bullet { background: var(--primary); opacity: 0.2; width: 8px; height: 8px; transition: all 0.4s ease; }
+        .swiper-pagination-bullet-active { background: var(--accent); opacity: 1; width: 20px; border-radius: 4px; }
+        .swiper-button-next, .swiper-button-prev { color: var(--primary) !important; background: rgba(255,255,255,0.9); width: 40px !important; height: 40px !important; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .swiper-button-next:hover, .swiper-button-prev:hover { transform: scale(1.1); }
+        .swiper-button-next:after, .swiper-button-prev:after { font-size: 1rem !important; font-weight: bold; }
+
+        /* =========================================
+           Company & Contact
+        ========================================= */
+        .info-section { display: flex; flex-wrap: wrap; background-color: var(--primary); color: var(--white); padding: 0; }
+        .company-box, .contact-box { flex: 1 1 50%; padding: 100px 5%; }
+        .company-box { background-color: var(--bg-light); color: var(--text-main); }
+        .c-table { width: 100%; border-collapse: collapse; margin-top: 30px; font-size: clamp(0.8rem, 1.5vw, 0.95rem); }
+        .c-table th, .c-table td { padding: 12px 0; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top; }
+        .c-table th { width: 35%; font-weight: 700; color: var(--primary); }
+        
+        .contact-box { display: flex; flex-direction: column; justify-content: center; background-image: url('https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&w=800&q=80'); background-size: cover; background-position: center; background-blend-mode: overlay; background-color: rgba(15, 23, 42, 0.95); }
+        .contact-msg { font-size: clamp(0.85rem, 1.5vw, 1.1rem); margin-bottom: 20px; line-height: 1.8; color: #ddd;}
+        .big-phone { font-family: var(--font-en); font-size: clamp(1.8rem, 5vw, 4rem); font-weight: 900; color: var(--accent); display: inline-block; margin-top: 15px; position: relative; width: fit-content; }
+        .big-phone::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 0%; height: 3px; background-color: var(--accent); transition: width 0.4s ease; }
+        .big-phone:hover::after { width: 100%; }
+
+        /* =========================================
+           Modern Footer
+        ========================================= */
+        .modern-footer { background-color: #05080f; color: #fff; padding: 100px 5% 40px; position: relative; overflow: hidden;}
+        .footer-huge-text { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: clamp(3rem, 12vw, 15rem); font-family: var(--font-en); font-weight: 900; color: rgba(255,255,255,0.02); white-space: nowrap; pointer-events: none; z-index: 0; }
+        .footer-content { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 60px; }
+        .footer-info { width: 40%; }
+        .footer-logo { font-family: var(--font-en); font-size: 2rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 20px; }
+        .footer-desc { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.8; margin-bottom: 15px; }
+        .footer-links { width: 50%; display: flex; gap: 40px; justify-content: flex-end; }
+        .footer-col h4 { font-family: var(--font-en); color: var(--accent); font-size: 1.1rem; margin-bottom: 20px; letter-spacing: 2px;}
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { font-size: 0.85rem; color: rgba(255,255,255,0.6); transition: color 0.3s; letter-spacing: 1px; }
+        .footer-col ul li a:hover { color: var(--white); padding-left: 5px; }
+        .footer-bottom { position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* =========================================
+           Responsive Adjustments (Mobile Optimized)
+        ========================================= */
+        @media (max-width: 768px) {
+            /* 全体的なセクションの余白を圧縮 */
+            section { padding: 60px 5%; }
+            .sec-en { font-size: 2rem; }
+            
+            /* ロゴ・ヘッダー回り */
+            header { padding: 15px 20px; }
+            .logo a { font-size: 1.2rem; }
+            
+            /* ビジョン・メッセージセクション */
+            .philosophy-box { margin-bottom: 40px; }
+            .team-gallery { grid-template-columns: 1fr; margin-bottom: 50px; gap: 10px; }
+            .team-img-wrapper { aspect-ratio: 16 / 9; }
+            .vertical-text-box { writing-mode: horizontal-tb; height: auto; display: flex; flex-direction: column; gap: 15px; }
+            .vertical-title { text-align: left; letter-spacing: 3px; }
+            
+            /* サービスカードの余白圧縮 */
+            .service-card { padding: 30px 20px; min-height: auto; }
+            
+            /* CTAバナーの余白とレイアウト */
+            .cta-container { padding: 0 5% 60px; }
+            .cta-banner { flex-direction: column; }
+            .cta-img, .cta-content { width: 100%; }
+            .cta-img { min-height: 200px; }
+            .cta-content { padding: 35px 20px; }
+            .cta-content p { margin-bottom: 25px; }
+            
+            /* 選ばれる理由の余白圧縮 */
+            .mvv-container { margin-top: 40px; gap: 40px; }
+            .mvv-item { flex-direction: column; gap: 15px; padding-bottom: 25px; }
+            
+            /* カルーセル(実績) */
+            .works-section { padding-top: 60px; padding-bottom: 60px; }
+            .works-header { margin-bottom: 30px; }
+            .swiper-slide { width: 90%; } /* スマホ時は画面に大きく表示 */
+            .work-overlay { padding: 20px; }
+            
+            /* 企業情報・コンタクトの余白圧縮 */
+            .company-box, .contact-box { flex: 1 1 100%; padding: 50px 5%; }
+            
+            /* フッター */
+            .modern-footer { padding: 60px 5% 30px; }
+            .footer-huge-text { top: 0; font-size: 3.5rem; }
+            .footer-content { margin-bottom: 40px; }
+            .footer-info, .footer-links { width: 100%; justify-content: flex-start; }
+            .footer-links { margin-top: 40px; flex-direction: column; gap: 30px; }
+            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo"><a href="#" class="hover-target">KAI-KENSETSU.</a></div>
+        <div class="hamburger hover-target">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- Full Screen Navigation -->
+    <div class="menu-overlay">
+        <ul>
+            <li><a href="#home" class="hover-target">HOME<span class="menu-ja">ホーム</span></a></li>
+            <li><a href="#vision" class="hover-target">VISION<span class="menu-ja">企業理念・ご挨拶</span></a></li>
+            <li><a href="#services" class="hover-target">SERVICES<span class="menu-ja">事業内容</span></a></li>
+            <li><a href="#reasons" class="hover-target">WHY US<span class="menu-ja">選ばれる理由</span></a></li>
+            <li><a href="#works" class="hover-target">WORKS<span class="menu-ja">施工実績</span></a></li>
+            <li><a href="#company" class="hover-target">COMPANY<span class="menu-ja">会社概要・お問い合わせ</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content reveal active">
+            <div class="hero-badge">GENERAL CONSTRUCTION</div>
+            <h1 class="hero-title">BUILD<br>THE <span>FUTURE</span>.</h1>
+            <p class="hero-subtitle">限界を超える、建設を。</p>
+        </div>
+    </section>
+
+    <!-- Vision & Message Section -->
+    <section id="vision" class="vision-section">
+        <div class="philosophy-box reveal">
+            <p class="sec-en" style="font-size: 1.1rem; color: var(--accent); margin-bottom: 10px;">PHILOSOPHY</p>
+            <h2 class="philosophy-title">クオリティの高いサービスを提供し続け、<br>お客さまと常にWinWinの関係を築く</h2>
+            <p class="philosophy-text">
+                会社経営を長く続けていくには、お客さまからの信頼を得ることが必要不可欠です。<br>
+                お客さまにお値段以上に満足していただくことが、次のお仕事を頂けることにつながっていくのだと当社は考えています。<br>
+                これからも株式会社開建設は、お客様第一のサービスを提供し続けます。
+            </p>
+        </div>
+
+        <div class="team-gallery reveal hover-target">
+            <div class="team-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&w=600&q=80" alt="施工風景1">
+            </div>
+            <div class="team-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80" alt="施工風景2">
+            </div>
+            <div class="team-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1504307651254-35680f356f27?auto=format&fit=crop&w=600&q=80" alt="施工風景3">
+            </div>
+        </div>
+
+        <div class="vertical-message-container reveal">
+            <div class="vertical-text-box">
+                <h3 class="vertical-title">期待を超える品質が、<br>未来の信頼を築く。</h3>
+                <p class="vertical-desc">
+                    創業以来、長きに渡り建設・塗装工事に携わってまいりました。<br>
+                    地域の皆様や周りの会社様に支えられて頂いたおかげです。
+                </p>
+                <p class="vertical-desc">
+                    期待以上の仕事をすることが、<br>
+                    仕事を発注いただいたお客様への唯一の恩返しです。<br>
+                    クオリティの高い工事をコツコツと積み重ねていくことが、<br>
+                    数多ある会社の中から選んでいただく未来にもつながると信じております。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="reveal">
+            <h2 class="sec-en">SERVICES</h2>
+            <p class="sec-ja">事業内容</p>
+            <p class="service-intro">
+                株式会社開建設は主に神奈川県、東京都のアパート・マンション等の塗装工事、大規模修繕を行なっております。下地処理を徹底的に行い、長期間しっかり効果を発揮してくれる高品質な施工を得意としております。
+            </p>
+        </div>
+        
+        <div class="service-grid">
+            <div class="service-card reveal hover-target">
+                <i class="fa-solid fa-building service-icon"></i>
+                <div class="service-num">01</div>
+                <h3>外壁修繕・外壁塗装</h3>
+                <p>見栄えやデザイン性を向上させるだけでなく、雨風や紫外線から住宅を守ります。築年数のある建物への定期的な塗り替え、マンションの大規模改修工事にも対応いたします。</p>
+            </div>
+            <div class="service-card reveal hover-target">
+                <i class="fa-solid fa-paint-roller service-icon"></i>
+                <div class="service-num">02</div>
+                <h3>内装塗装・一般建築</h3>
+                <p>店舗や事務所、住宅などの内装塗装や一般建築工事を行っております。壁紙クロスでは出せない素材感や幅広いカラーリングで、理想の空間づくりをご提供致します。</p>
+            </div>
+            <div class="service-card reveal hover-target">
+                <i class="fa-solid fa-house-chimney service-icon"></i>
+                <div class="service-num">03</div>
+                <h3>屋根塗装・吹き付け工事</h3>
+                <p>最も環境の影響を受けやすい屋根に対し、断熱性・遮熱性に優れた機能性の高い塗料を用いた施工を行います。プロの目線から状態を確認し最適なご提案をいたします。</p>
+            </div>
+            <div class="service-card reveal hover-target">
+                <i class="fa-solid fa-droplet service-icon"></i>
+                <div class="service-num">04</div>
+                <h3>防水工事・シーリング</h3>
+                <p>建築物における降雨水を遮断し、漏水を防ぎます。壁の隙間やサッシ、ベランダなど水が侵入しやすい場所への確実な施工で、住宅への保護機能をさらに高めます。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner Section -->
+    <div class="cta-container">
+        <div class="cta-banner reveal hover-target">
+            <div class="cta-img"></div>
+            <div class="cta-content">
+                <h2>建設・塗装・修繕のことで<br>お困りではありませんか？</h2>
+                <p>当社では、小規模な修繕からマンションの大規模改修まで、多種多様なニーズに対応可能です。まずはお気軽にお電話にてお問い合わせください。</p>
+                <a href="tel:045-349-9876" class="cta-btn"><i class="fa-solid fa-phone"></i> 045-349-9876</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <section id="reasons" class="strengths-section">
+        <div class="reveal">
+            <h2 class="sec-en-light">WHY CHOOSE US</h2>
+            <p class="sec-ja-light">開建設が選ばれる理由</p>
+        </div>
+        <div class="mvv-container">
+            <div class="mvv-item reveal">
+                <div class="mvv-num">01</div>
+                <div class="mvv-content">
+                    <h3>信用第一で取り組み続ける</h3>
+                    <p>弊社の業務はお客様からのご依頼がなければ成り立ちません。安心して頼める、また次回も頼みたいと思える業者であり続けられるように「信用第一」で取り組んでおります。</p>
+                </div>
+            </div>
+            <div class="mvv-item reveal">
+                <div class="mvv-num">02</div>
+                <div class="mvv-content">
+                    <h3>下地処理を徹底した高品質な施工</h3>
+                    <p>質の悪い施工や塗料では建物の寿命が短くなってしまいます。弊社では、見えない部分である「下地処理」を徹底的に行うことで、長期間にわたり建物を守ります。</p>
+                </div>
+            </div>
+            <div class="mvv-item reveal">
+                <div class="mvv-num">03</div>
+                <div class="mvv-content">
+                    <h3>多種多様なニーズに応える技術力</h3>
+                    <p>塗装だけでなく、防水、シーリング、一般建築・内装工事まで幅広く対応。多様化するお客様のニーズに迅速かつ丁寧にお応えできる体制を整えています。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Works Section (Smart & Rich Carousel) -->
+    <section id="works" class="works-section">
+        <div class="works-header reveal">
+            <div>
+                <h2 class="sec-en">WORKS</h2>
+                <p class="sec-ja">施工実績</p>
+            </div>
+        </div>
+        
+        <div class="swiper-container swiper reveal hover-target">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80" alt="実績1">
+                    <div class="work-overlay">
+                        <h4>〇〇マンション 大規模修繕</h4>
+                        <p>外壁修繕・防水工事一式</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356f27?auto=format&fit=crop&w=1600&q=80" alt="実績2">
+                    <div class="work-overlay">
+                        <h4>△△オフィスビル 外壁塗装</h4>
+                        <p>遮熱塗装・光触媒塗装の導入</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://images.unsplash.com/photo-1590644365607-1c5a392275ce?auto=format&fit=crop&w=1600&q=80" alt="実績3">
+                    <div class="work-overlay">
+                        <h4>商業施設 内装塗装・改修</h4>
+                        <p>デザイン性の高い空間づくり</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&q=80" alt="実績4">
+                    <div class="work-overlay">
+                        <h4>物流センター 建設プロジェクト</h4>
+                        <p>安全管理を徹底した大規模施工</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </section>
+
+    <!-- Company & Contact Info -->
+    <section id="company" class="info-section">
+        <div class="company-box reveal">
+            <h2 class="sec-en">COMPANY</h2>
+            <p class="sec-ja">会社概要</p>
+            <table class="c-table">
+                <tr><th>社名</th><td>株式会社開建設</td></tr>
+                <tr><th>事業内容</th><td>マンション・ビル等 外壁修繕・大規模改修工事<br>各所改修工事 / 塗装工事<br>防水工事 / シーリング工事<br>遮熱塗装・光触媒塗装<br>一般建築・内装工事</td></tr>
+                <tr><th>役員</th><td>代表取締役会長：何 煒<br>取締役社長：曽我部 章彦</td></tr>
+                <tr><th>所在地</th><td>〒233-0011<br>神奈川県横浜市港南区東永谷3-59-6</td></tr>
+                <tr><th>連絡先</th><td>TEL：045-349-9876<br>FAX：045-349-9875</td></tr>
+                <tr><th>設立</th><td>2013年6月3日</td></tr>
+                <tr><th>資本金</th><td>10,000,000円</td></tr>
+                <tr><th>許可番号</th><td>神奈川県知事許可(般-8)第88728号</td></tr>
+            </table>
+        </div>
+        
+        <div class="contact-box reveal">
+            <h2 class="sec-en" style="color:var(--accent);">CONTACT</h2>
+            <p class="sec-ja" style="color:#fff;">お問い合わせ</p>
+            <div style="margin-top:30px;">
+                <p class="contact-msg">
+                    大規模改修や各種塗装工事のご相談、<br>
+                    お見積りはお気軽にお問い合わせください。
+                </p>
+                <a href="tel:045-349-9876" class="big-phone hover-target">045-349-9876</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Refined Footer -->
+    <footer class="modern-footer">
+        <div class="footer-huge-text">KAI-KENSETSU.</div>
+        <div class="footer-content">
+            <div class="footer-info reveal">
+                <div class="footer-logo">KAI-KENSETSU.</div>
+                <p class="footer-desc">
+                    株式会社開建設<br>
+                    神奈川県横浜市を拠点に、神奈川県・東京都内のビル・マンション・アパート等の塗装・修繕・防水工事一式を施工しております。
+                </p>
+                <p style="color:var(--accent); font-family:var(--font-en); font-weight:700; font-size:1.1rem;">
+                    TEL. 045-349-9876
+                </p>
+            </div>
+            
+            <div class="footer-links reveal">
+                <div class="footer-col">
+                    <h4>MENU</h4>
+                    <ul>
+                        <li><a href="#home">ホーム</a></li>
+                        <li><a href="#vision">企業理念・ご挨拶</a></li>
+                        <li><a href="#services">事業内容</a></li>
+                        <li><a href="#reasons">選ばれる理由</a></li>
+                        <li><a href="#works">施工実績</a></li>
+                        <li><a href="#company">会社概要・お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>COMPANY</h4>
+                    <ul>
+                        <li>〒233-0011</li>
+                        <li>神奈川県横浜市港南区</li>
+                        <li>東永谷3-59-6</li>
+                        <li><br>一般建設業許可</li>
+                        <li>神奈川県知事許可(般-8)第88728号</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 KAI KENSETSU CO., LTD. ALL RIGHTS RESERVED.</div>
+            <div>INNOVATIVE CONSTRUCTION</div>
+        </div>
+    </footer>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script>
+        // 1. Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, .hamburger, .swiper-slide, .service-card, .cta-btn, .team-img-wrapper');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({
+                left: `${posX}px`, top: `${posY}px`
+            }, { duration: 150, fill: "forwards" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+            target.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
+        });
+
+        // 2. Hamburger Menu
+        const hamburger = document.querySelector('.hamburger');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuLinks = document.querySelectorAll('.menu-overlay a');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        });
+
+        // 3. Scroll Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 4. Swiper Initialization
+        const swiper = new Swiper('.swiper', {
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            spaceBetween: 40,
+            loop: true,
+            speed: 800,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                320: { spaceBetween: 20 },
+                768: { spaceBetween: 40 }
+            }
+        });
+    </script>
+</body>
+</html>
